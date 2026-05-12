@@ -4,1191 +4,537 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MJP Export Excel Branding - Odoo 18</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-
-  <style>
-    :root{
-      --purple:#714B67;
-      --purple-dark:#4E3348;
-      --purple-deep:#2E1A2E;
-      --purple-soft:#9C6E8C;
-      --purple-pale:#F3EBF0;
-      --purple-mid:#C4A3B8;
-      --accent:#E8C547;
-      --white:#FFFFFF;
-      --off-white:#FAF7F9;
-      --text:#1A0F18;
-      --text-muted:#7A6070;
-      --border:#E7DCE3;
-      --blue-header:#D9EAF7;
-    }
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
-
-    body{
-      font-family:"DM Sans",sans-serif;
-      color:var(--text);
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at top left, #f7edf3 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #efe5ec 0%, transparent 25%),
-        var(--off-white);
-    }
-
-    img{
-      max-width:100%;
-      display:block;
-    }
-
-    /* ===============================
-       FLOATING NAV
-    ================================ */
-
-    .floating-nav{
-      position:fixed;
-      top:18px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:9999;
-      display:flex;
-      gap:10px;
-      padding:10px;
-      border-radius:18px;
-      background:rgba(255,255,255,.72);
-      backdrop-filter:blur(16px);
-      border:1px solid rgba(255,255,255,.7);
-      box-shadow:0 10px 40px rgba(0,0,0,.08);
-    }
-
-    .floating-nav a{
-      text-decoration:none;
-      color:var(--purple-deep);
-      font-size:13px;
-      font-weight:600;
-      padding:10px 16px;
-      border-radius:10px;
-      transition:.25s ease;
-    }
-
-    .floating-nav a:hover{
-      background:var(--purple-pale);
-    }
-
-    /* ===============================
-       HERO
-    ================================ */
-
-    .hero{
-      position:relative;
-      overflow:hidden;
-      isolation:isolate;
-      text-align:center;
-      padding:120px 40px 110px;
-      background:
-        linear-gradient(135deg,#2E1A2E 0%, #4E3348 100%);
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        repeating-linear-gradient(
-          -45deg,
-          transparent,
-          transparent 40px,
-          rgba(255,255,255,.02) 40px,
-          rgba(255,255,255,.02) 41px
-        );
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      width:700px;
-      height:700px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle, rgba(255,255,255,.06), transparent 70%);
-      top:-300px;
-      right:-150px;
-      z-index:-1;
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:2;
-      max-width:1100px;
-      margin:auto;
-    }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--purple-mid);
-      border-radius:999px;
-      padding:8px 18px;
-      font-size:12px;
-      font-weight:600;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-bottom:28px;
-    }
-
-    .hero-badge span{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--accent);
-    }
-
-    .hero h1{
-      font-family:"DM Serif Display",serif;
-      color:white;
-      line-height:1.05;
-      letter-spacing:-0.04em;
-      font-size:clamp(46px,7vw,78px);
-      margin-bottom:24px;
-    }
-
-    .hero h1 em{
-      font-style:italic;
-      color:var(--purple-mid);
-    }
-
-    .hero p{
-      max-width:760px;
-      margin:0 auto 42px;
-      font-size:18px;
-      line-height:1.8;
-      color:rgba(255,255,255,.72);
-    }
-
-    .hero-pills{
-      display:flex;
-      justify-content:center;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .pill{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.82);
-      font-size:13px;
-      backdrop-filter:blur(10px);
-    }
-
-    .pill svg{
-      width:14px;
-      height:14px;
-      fill:var(--accent);
-      flex-shrink:0;
-    }
-
-    .hero-actions{
-      margin-top:44px;
-      display:flex;
-      justify-content:center;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    .btn-primary,
-    .btn-secondary{
-      text-decoration:none;
-      padding:15px 28px;
-      border-radius:16px;
-      font-size:14px;
-      font-weight:700;
-      transition:all .3s ease;
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg,#E8C547,#d9af24);
-      color:#2E1A2E;
-      box-shadow:0 12px 30px rgba(232,197,71,.3);
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-3px);
-      box-shadow:0 20px 45px rgba(232,197,71,.4);
-    }
-
-    .btn-secondary{
-      border:1px solid rgba(255,255,255,.15);
-      background:rgba(255,255,255,.06);
-      color:white;
-      backdrop-filter:blur(10px);
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,.1);
-    }
-
-    /* ===============================
-       GLOBAL SECTIONS
-    ================================ */
-
-    .section{
-      padding:100px 40px;
-      position:relative;
-    }
-
-    .section-inner{
-      width:100%;
-      max-width:1180px;
-      margin:auto;
-      position:relative;
-      z-index:2;
-    }
-
-    .section-label{
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--purple);
-      margin-bottom:14px;
-    }
-
-    .section-title{
-      font-family:"DM Serif Display",serif;
-      font-size:clamp(34px,5vw,56px);
-      line-height:1.1;
-      letter-spacing:-0.03em;
-      margin-bottom:20px;
-      color:var(--purple-deep);
-    }
-
-    .section-sub{
-      max-width:680px;
-      font-size:17px;
-      line-height:1.8;
-      color:var(--text-muted);
-      margin-bottom:60px;
-    }
-
-    /* ===============================
-       SCREENSHOTS
-    ================================ */
-
-    .screenshots{
-      background:white;
-    }
-
-    .screenshot-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:26px;
-    }
-
-    .screenshot-card{
-      overflow:hidden;
-      border-radius:26px;
-      border:1px solid rgba(255,255,255,.8);
-      background:white;
-      transition:all .35s ease;
-      box-shadow:0 16px 50px rgba(113,75,103,.08);
-    }
-
-    .screenshot-card:hover{
-      transform:translateY(-6px);
-      box-shadow:0 24px 60px rgba(113,75,103,.16);
-    }
-
-    .screenshot-card.wide{
-      grid-column:1 / -1;
-    }
-
-    .screenshot-label{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:16px 20px;
-      background:var(--purple-pale);
-      border-bottom:1px solid var(--border);
-      font-size:12px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--purple);
-    }
-
-    .screenshot-label::before{
-      content:"";
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--purple);
-    }
-
-    .screenshot-card img{
-      transition:transform .45s ease;
-    }
-
-    .screenshot-card:hover img{
-      transform:scale(1.02);
-    }
-
-    /* ===============================
-       FEATURES
-    ================================ */
-
-    .features-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:22px;
-    }
-
-    .feature-card{
-      background:rgba(255,255,255,.72);
-      backdrop-filter:blur(14px);
-      border:1px solid rgba(255,255,255,.6);
-      border-radius:24px;
-      padding:32px 28px;
-      transition:all .3s ease;
-      box-shadow:
-        0 10px 30px rgba(113,75,103,.05),
-        inset 0 1px 0 rgba(255,255,255,.5);
-    }
-
-    .feature-card:hover{
-      transform:translateY(-6px);
-      box-shadow:
-        0 24px 50px rgba(113,75,103,.12),
-        inset 0 1px 0 rgba(255,255,255,.5);
-    }
-
-    .feature-icon{
-      width:52px;
-      height:52px;
-      border-radius:14px;
-      background:var(--purple-pale);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-bottom:20px;
-    }
-
-    .feature-icon svg{
-      width:24px;
-      height:24px;
-      fill:var(--purple);
-    }
-
-    .feature-card h3{
-      font-size:17px;
-      font-weight:700;
-      margin-bottom:10px;
-      color:var(--purple-deep);
-    }
-
-    .feature-card p{
-      font-size:14px;
-      line-height:1.8;
-      color:var(--text-muted);
-    }
-
-    /* ===============================
-       HOW IT WORKS
-    ================================ */
-
-    .how{
-      background:linear-gradient(135deg,#2E1A2E 0%, #4E3348 100%);
-    }
-
-    .how .section-title{
-      color:white;
-    }
-
-    .how .section-label{
-      color:var(--purple-mid);
-    }
-
-    .how .section-sub{
-      color:rgba(255,255,255,.65);
-    }
-
-    .steps{
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:0;
-    }
-
-    .steps::before{
-      content:"";
-      position:absolute;
-      left:21px;
-      top:0;
-      bottom:0;
-      width:2px;
-      background:
-        linear-gradient(to bottom, var(--purple), transparent);
-    }
-
-    .step{
-      display:flex;
-      gap:24px;
-      padding-bottom:40px;
-      position:relative;
-    }
-
-    .step:last-child{
-      padding-bottom:0;
-    }
-
-    .step-num{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:var(--purple);
-      color:white;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      flex-shrink:0;
-      border:3px solid #2E1A2E;
-      z-index:2;
-    }
-
-    .step-content h3{
-      color:white;
-      font-size:17px;
-      margin-bottom:8px;
-      padding-top:8px;
-    }
-
-    .step-content p{
-      color:rgba(255,255,255,.62);
-      line-height:1.8;
-      font-size:14px;
-    }
-
-    /* ===============================
-       TABLE
-    ================================ */
-
-    .layout-table{
-      width:100%;
-      overflow:hidden;
-      border-collapse:collapse;
-      border-radius:22px;
-      background:white;
-      box-shadow:0 15px 40px rgba(113,75,103,.08);
-    }
-
-    .layout-table th{
-      background:var(--purple);
-      color:white;
-      text-align:left;
-      padding:18px;
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .layout-table td{
-      padding:18px;
-      border-bottom:1px solid var(--border);
-      font-size:14px;
-    }
-
-    .layout-table tr:last-child td{
-      border-bottom:none;
-    }
-
-    .layout-table tr:nth-child(even){
-      background:var(--off-white);
-    }
-
-    .row-badge{
-      display:inline-block;
-      padding:5px 12px;
-      border-radius:8px;
-      background:var(--blue-header);
-      color:#3A6E99;
-      border:1px solid #B8D4EE;
-      font-size:12px;
-      font-weight:700;
-    }
-
-    /* ===============================
-       INSTALL
-    ================================ */
-
-    .install-steps{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:20px;
-    }
-
-    .install-step{
-      background:white;
-      border-radius:24px;
-      padding:34px 24px;
-      text-align:center;
-      border:1px solid rgba(255,255,255,.7);
-      box-shadow:0 10px 35px rgba(113,75,103,.06);
-    }
-
-    .install-num{
-      font-family:"DM Serif Display",serif;
-      font-size:48px;
-      line-height:1;
-      margin-bottom:16px;
-      color:var(--purple-pale);
-      -webkit-text-stroke:2px var(--purple-mid);
-    }
-
-    .install-step h3{
-      font-size:16px;
-      color:var(--purple-deep);
-      margin-bottom:10px;
-    }
-
-    .install-step p{
-      font-size:14px;
-      line-height:1.8;
-      color:var(--text-muted);
-    }
-
-    /* ===============================
-       FOOTER
-    ================================ */
-
-    footer{
-      position:relative;
-      overflow:hidden;
-      text-align:center;
-      padding:80px 30px;
-      background:
-        linear-gradient(180deg,#2E1A2E 0%, #1A0F18 100%);
-    }
-
-    footer::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at center, rgba(255,255,255,.04), transparent 60%);
-    }
-
-    .footer-brand{
-      position:relative;
-      z-index:2;
-      font-family:"DM Serif Display",serif;
-      font-size:32px;
-      color:white;
-      margin-bottom:16px;
-    }
-
-    .footer-tags{
-      position:relative;
-      z-index:2;
-      display:flex;
-      justify-content:center;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .footer-tag{
-      padding:6px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      color:rgba(255,255,255,.62);
-      font-size:12px;
-    }
-
-    footer p{
-      position:relative;
-      z-index:2;
-      color:rgba(255,255,255,.45);
-      font-size:13px;
-    }
-
-    /* ===============================
-       MOBILE
-    ================================ */
-
-    @media(max-width:992px){
-
-      .features-grid{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .install-steps{
-        grid-template-columns:1fr 1fr;
-      }
-
-    }
-
-    @media(max-width:768px){
-
-      .floating-nav{
-        display:none;
-      }
-
-      .hero{
-        padding:90px 20px 80px;
-      }
-
-      .section{
-        padding:70px 20px;
-      }
-
-      .hero h1{
-        font-size:48px;
-      }
-
-      .hero-actions{
-        flex-direction:column;
-      }
-
-      .btn-primary,
-      .btn-secondary{
-        width:100%;
-        text-align:center;
-      }
-
-      .screenshot-grid{
-        grid-template-columns:1fr;
-      }
-
-      .screenshot-card.wide{
-        grid-column:auto;
-      }
-
-      .features-grid{
-        grid-template-columns:1fr;
-      }
-
-      .install-steps{
-        grid-template-columns:1fr;
-      }
-
-      .section-title{
-        font-size:38px;
-      }
-
-      .feature-card,
-      .install-step,
-      .screenshot-card{
-        border-radius:20px;
-      }
-
-    }
-
-  </style>
 </head>
-<body>
-
-<!-- FLOATING NAV -->
-
-<div class="floating-nav">
-  <a href="#features">Features</a>
-  <a href="#screenshots">Screenshots</a>
-  <a href="#layout">Layout</a>
-  <a href="#install">Install</a>
-</div>
+<body style="margin:0;padding:0;font-family:Georgia,serif;color:#1A0F18;background:#FAF7F9;">
 
 <!-- HERO -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#2E1A2E;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:60px 30px 50px;">
 
-<section class="hero">
-
-  <div class="hero-content">
-
-    <div class="hero-badge">
-      <span></span>
-      Odoo 18 · Free · Open Source
-    </div>
-
-    <h1>
-      Excel Exports,<br>
-      <em>Professionally Branded</em>
-    </h1>
-
-    <p>
-      Add your company logo, metadata, timestamps, styled headers,
-      and professional branding to every Excel export —
-      configurable per model directly from General Settings.
-    </p>
-
-    <div class="hero-pills">
-
-      <div class="pill">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        Company Logo & Name
+      <!-- Badge -->
+      <div style="display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#C4A3B8;border-radius:999px;padding:7px 18px;font-size:12px;font-weight:700;letter-spacing:0.1em;font-family:Arial,sans-serif;margin-bottom:24px;">
+        ● &nbsp; ODOO 18 · FREE · OPEN SOURCE
       </div>
 
-      <div class="pill">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        Generated By & Timestamp
+      <!-- Heading -->
+      <div style="font-size:54px;font-weight:900;color:#FFFFFF;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:8px;">
+        Excel Exports,
+      </div>
+      <div style="font-size:54px;font-weight:900;font-style:italic;color:#C4A3B8;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:28px;">
+        Professionally Branded
       </div>
 
-      <div class="pill">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        Record Count
+      <!-- Sub -->
+      <div style="max-width:680px;margin:0 auto 36px;font-size:17px;line-height:1.8;color:rgba(255,255,255,0.72);font-family:Arial,sans-serif;text-align:center;">
+        Add your company logo, metadata, timestamps, styled headers,
+        and professional branding to every Excel export —
+        configurable per model directly from General Settings.
       </div>
 
-      <div class="pill">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        Styled Headers
-      </div>
+      <!-- Pills row -->
+      <table cellpadding="0" cellspacing="0" align="center" style="margin-bottom:36px;">
+        <tr>
+          <td style="padding:5px;">
+            <div style="display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-family:Arial,sans-serif;white-space:nowrap;">
+              ✓ &nbsp;Company Logo &amp; Name
+            </div>
+          </td>
+          <td style="padding:5px;">
+            <div style="display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-family:Arial,sans-serif;white-space:nowrap;">
+              ✓ &nbsp;Generated By &amp; Timestamp
+            </div>
+          </td>
+          <td style="padding:5px;">
+            <div style="display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-family:Arial,sans-serif;white-space:nowrap;">
+              ✓ &nbsp;Record Count
+            </div>
+          </td>
+          <td style="padding:5px;">
+            <div style="display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-family:Arial,sans-serif;white-space:nowrap;">
+              ✓ &nbsp;Styled Headers
+            </div>
+          </td>
+          <td style="padding:5px;">
+            <div style="display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-family:Arial,sans-serif;white-space:nowrap;">
+              ✓ &nbsp;Configurable per Model
+            </div>
+          </td>
+        </tr>
+      </table>
 
-      <div class="pill">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-        Configurable per Model
-      </div>
-
-    </div>
-
-    <div class="hero-actions">
-      <a href="#install" class="btn-primary">
-        Install Module
-      </a>
-
-      <a href="#screenshots" class="btn-secondary">
-        View Screenshots
-      </a>
-    </div>
-
-  </div>
-
-</section>
+    </td>
+  </tr>
+</table>
 
 <!-- SCREENSHOTS -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;margin:0;">
+  <tr>
+    <td style="padding:70px 40px;">
 
-<section id="screenshots" class="section screenshots">
-
-  <div class="section-inner">
-
-    <div class="section-label">Screenshots</div>
-
-    <h2 class="section-title">
-      See It in Action
-    </h2>
-
-    <p class="section-sub">
-      From configuration settings to the final branded spreadsheet —
-      here’s exactly how the export experience looks inside Odoo 18.
-    </p>
-
-    <div class="screenshot-grid">
-
-      <div class="screenshot-card">
-        <div class="screenshot-label">
-          General Settings — Model Selection
-        </div>
-
-        <img src="excel1.png" alt="Settings">
+      <!-- Section label -->
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#714B67;margin-bottom:12px;font-family:Arial,sans-serif;">
+        Screenshots
+      </div>
+      <div style="font-size:42px;font-weight:900;color:#2E1A2E;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:14px;">
+        See It in Action
+      </div>
+      <div style="font-size:16px;line-height:1.8;color:#7A6070;margin-bottom:48px;max-width:640px;font-family:Arial,sans-serif;">
+        From configuration settings to the final branded spreadsheet —
+        here's exactly how the export experience looks inside Odoo 18.
       </div>
 
-      <div class="screenshot-card">
-        <div class="screenshot-label">
-          Export Dialog — XLSX Export
-        </div>
+      <!-- Screenshot grid -->
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
 
-        <img src="excel2.png" alt="Export Dialog">
-      </div>
+          <!-- Card 1 -->
+          <td width="49%" style="padding-right:12px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:20px;overflow:hidden;border:1px solid #E7DCE3;box-shadow:0 12px 40px rgba(113,75,103,0.08);">
+              <tr>
+                <td style="background:#F3EBF0;border-bottom:1px solid #E7DCE3;padding:14px 18px;">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#714B67;margin-right:8px;vertical-align:middle;"></span>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#714B67;font-family:Arial,sans-serif;">General Settings — Model Selection</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0;">
+                  <img src="excel1.png" alt="Settings screenshot" style="width:100%;display:block;"/>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-      <div class="screenshot-card wide">
-        <div class="screenshot-label">
-          Output — Branded Excel File
-        </div>
+          <!-- Card 2 -->
+          <td width="49%" style="padding-left:12px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:20px;overflow:hidden;border:1px solid #E7DCE3;box-shadow:0 12px 40px rgba(113,75,103,0.08);">
+              <tr>
+                <td style="background:#F3EBF0;border-bottom:1px solid #E7DCE3;padding:14px 18px;">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#714B67;margin-right:8px;vertical-align:middle;"></span>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#714B67;font-family:Arial,sans-serif;">Export Dialog — XLSX Export</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0;">
+                  <img src="excel2.png" alt="Export dialog screenshot" style="width:100%;display:block;"/>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-        <img src="excel3.png" alt="Excel Output">
-      </div>
+        </tr>
 
-    </div>
+        <tr>
+          <td colspan="2" style="padding-top:24px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:20px;overflow:hidden;border:1px solid #E7DCE3;box-shadow:0 12px 40px rgba(113,75,103,0.08);">
+              <tr>
+                <td style="background:#F3EBF0;border-bottom:1px solid #E7DCE3;padding:14px 18px;">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#714B67;margin-right:8px;vertical-align:middle;"></span>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#714B67;font-family:Arial,sans-serif;">Output — Branded Excel File</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0;">
+                  <img src="excel3.png" alt="Excel output screenshot" style="width:100%;display:block;"/>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-  </div>
+      </table>
 
-</section>
+    </td>
+  </tr>
+</table>
 
 <!-- FEATURES -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;margin:0;">
+  <tr>
+    <td style="padding:70px 40px;">
 
-<section id="features" class="section features">
-
-  <div class="section-inner">
-
-    <div class="section-label">Features</div>
-
-    <h2 class="section-title">
-      Everything You Need
-    </h2>
-
-    <p class="section-sub">
-      A polished export experience designed specifically
-      for professional Odoo implementations.
-    </p>
-
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          ✓
-        </div>
-
-        <h3>Company Logo</h3>
-
-        <p>
-          Automatically embeds your company logo
-          into every exported spreadsheet.
-        </p>
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#714B67;margin-bottom:12px;font-family:Arial,sans-serif;">
+        Features
+      </div>
+      <div style="font-size:42px;font-weight:900;color:#2E1A2E;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:14px;">
+        Everything You Need
+      </div>
+      <div style="font-size:16px;line-height:1.8;color:#7A6070;margin-bottom:48px;max-width:640px;font-family:Arial,sans-serif;">
+        A polished export experience designed specifically
+        for professional Odoo implementations.
       </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">
-          ⏱
-        </div>
+      <!-- Features grid - 3 columns -->
+      <table width="100%" cellpadding="0" cellspacing="0">
 
-        <h3>User & Timestamp</h3>
+        <tr>
+          <!-- Feature 1 -->
+          <td width="33%" style="padding:0 10px 20px 0;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">✓</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Company Logo</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Automatically embeds your company logo into every exported spreadsheet.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-        <p>
-          Track who generated the export and
-          exactly when it was created.
-        </p>
-      </div>
+          <!-- Feature 2 -->
+          <td width="33%" style="padding:0 10px 20px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">⏱</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">User &amp; Timestamp</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Track who generated the export and exactly when it was created.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-      <div class="feature-card">
-        <div class="feature-icon">
-          📊
-        </div>
+          <!-- Feature 3 -->
+          <td width="33%" style="padding:0 0 20px 10px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">📊</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Record Count</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Display the total number of exported records automatically.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-        <h3>Record Count</h3>
+        <tr>
+          <!-- Feature 4 -->
+          <td width="33%" style="padding:0 10px 0 0;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">🎨</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Styled Headers</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Beautiful Excel headers with bold text, colors, borders, and alignment.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-        <p>
-          Display the total number of exported
-          records automatically.
-        </p>
-      </div>
+          <!-- Feature 5 -->
+          <td width="33%" style="padding:0 10px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">⚙</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Configurable Models</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Choose exactly which models use the branded export layout.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-      <div class="feature-card">
-        <div class="feature-icon">
-          🎨
-        </div>
+          <!-- Feature 6 -->
+          <td width="33%" style="padding:0 0 0 10px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:28px 24px;">
+                  <div style="width:48px;height:48px;border-radius:12px;background:#F3EBF0;text-align:center;line-height:48px;font-size:22px;margin-bottom:16px;">📁</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Grouped Export Support</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Fully compatible with grouped list exports and standard exports.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-        <h3>Styled Headers</h3>
+      </table>
 
-        <p>
-          Beautiful Excel headers with bold text,
-          colors, borders, and alignment.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          ⚙
-        </div>
-
-        <h3>Configurable Models</h3>
-
-        <p>
-          Choose exactly which models use the
-          branded export layout.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          📁
-        </div>
-
-        <h3>Grouped Export Support</h3>
-
-        <p>
-          Fully compatible with grouped list
-          exports and standard exports.
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+    </td>
+  </tr>
+</table>
 
 <!-- HOW IT WORKS -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#2E1A2E;margin:0;">
+  <tr>
+    <td style="padding:70px 40px;">
 
-<section class="section how">
-
-  <div class="section-inner">
-
-    <div class="section-label">How It Works</div>
-
-    <h2 class="section-title">
-      Simple & Transparent
-    </h2>
-
-    <p class="section-sub">
-      The module integrates directly into Odoo’s
-      export pipeline without modifying core logic.
-    </p>
-
-    <div class="steps">
-
-      <div class="step">
-
-        <div class="step-num">1</div>
-
-        <div class="step-content">
-          <h3>User starts XLSX export</h3>
-
-          <p>
-            Select records from any list view and
-            export as Excel normally.
-          </p>
-        </div>
-
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C4A3B8;margin-bottom:12px;font-family:Arial,sans-serif;">
+        How It Works
+      </div>
+      <div style="font-size:42px;font-weight:900;color:#FFFFFF;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:14px;">
+        Simple &amp; Transparent
+      </div>
+      <div style="font-size:16px;line-height:1.8;color:rgba(255,255,255,0.65);margin-bottom:48px;max-width:640px;font-family:Arial,sans-serif;">
+        The module integrates directly into Odoo's
+        export pipeline without modifying core logic.
       </div>
 
-      <div class="step">
+      <!-- Steps -->
+      <table width="100%" cellpadding="0" cellspacing="0">
 
-        <div class="step-num">2</div>
+        <!-- Step 1 -->
+        <tr>
+          <td style="padding-bottom:30px;vertical-align:top;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="vertical-align:top;padding-right:20px;">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#714B67;color:#FFFFFF;text-align:center;line-height:44px;font-weight:700;font-size:16px;font-family:Arial,sans-serif;">1</div>
+                </td>
+                <td style="vertical-align:top;padding-top:6px;">
+                  <div style="font-size:16px;font-weight:700;color:#FFFFFF;margin-bottom:6px;font-family:Arial,sans-serif;">User starts XLSX export</div>
+                  <div style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.62);font-family:Arial,sans-serif;">Select records from any list view and export as Excel normally.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-        <div class="step-content">
-          <h3>Configured models are checked</h3>
+        <!-- Step 2 -->
+        <tr>
+          <td style="padding-bottom:30px;vertical-align:top;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="vertical-align:top;padding-right:20px;">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#714B67;color:#FFFFFF;text-align:center;line-height:44px;font-weight:700;font-size:16px;font-family:Arial,sans-serif;">2</div>
+                </td>
+                <td style="vertical-align:top;padding-top:6px;">
+                  <div style="font-size:16px;font-weight:700;color:#FFFFFF;margin-bottom:6px;font-family:Arial,sans-serif;">Configured models are checked</div>
+                  <div style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.62);font-family:Arial,sans-serif;">The system reads your configured models from Odoo General Settings.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-          <p>
-            The system reads your configured models
-            from Odoo General Settings.
-          </p>
-        </div>
+        <!-- Step 3 -->
+        <tr>
+          <td style="padding-bottom:30px;vertical-align:top;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="vertical-align:top;padding-right:20px;">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#714B67;color:#FFFFFF;text-align:center;line-height:44px;font-weight:700;font-size:16px;font-family:Arial,sans-serif;">3</div>
+                </td>
+                <td style="vertical-align:top;padding-top:6px;">
+                  <div style="font-size:16px;font-weight:700;color:#FFFFFF;margin-bottom:6px;font-family:Arial,sans-serif;">Branding is injected</div>
+                  <div style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.62);font-family:Arial,sans-serif;">Company logo, metadata, and styled headers are automatically added.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
+        <!-- Step 4 -->
+        <tr>
+          <td style="vertical-align:top;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="vertical-align:top;padding-right:20px;">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#714B67;color:#FFFFFF;text-align:center;line-height:44px;font-weight:700;font-size:16px;font-family:Arial,sans-serif;">4</div>
+                </td>
+                <td style="vertical-align:top;padding-top:6px;">
+                  <div style="font-size:16px;font-weight:700;color:#FFFFFF;margin-bottom:6px;font-family:Arial,sans-serif;">Excel downloads instantly</div>
+                  <div style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.62);font-family:Arial,sans-serif;">Users receive a fully branded professional spreadsheet.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<!-- EXCEL STRUCTURE TABLE -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;margin:0;">
+  <tr>
+    <td style="padding:70px 40px;">
+
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#714B67;margin-bottom:12px;font-family:Arial,sans-serif;">
+        Excel Structure
+      </div>
+      <div style="font-size:42px;font-weight:900;color:#2E1A2E;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:14px;">
+        Header Layout
+      </div>
+      <div style="font-size:16px;line-height:1.8;color:#7A6070;margin-bottom:48px;max-width:640px;font-family:Arial,sans-serif;">
+        Every exported file follows a clean and professional structure.
       </div>
 
-      <div class="step">
+      <!-- Table -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:18px;overflow:hidden;border:1px solid #E7DCE3;box-shadow:0 12px 36px rgba(113,75,103,0.08);">
 
-        <div class="step-num">3</div>
-
-        <div class="step-content">
-          <h3>Branding is injected</h3>
-
-          <p>
-            Company logo, metadata, and styled headers
-            are automatically added.
-          </p>
-        </div>
-
-      </div>
-
-      <div class="step">
-
-        <div class="step-num">4</div>
-
-        <div class="step-content">
-          <h3>Excel downloads instantly</h3>
-
-          <p>
-            Users receive a fully branded
-            professional spreadsheet.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- TABLE -->
-
-<section id="layout" class="section">
-
-  <div class="section-inner">
-
-    <div class="section-label">Excel Structure</div>
-
-    <h2 class="section-title">
-      Header Layout
-    </h2>
-
-    <p class="section-sub">
-      Every exported file follows a clean
-      and professional structure.
-    </p>
-
-    <table class="layout-table">
-
-      <thead>
+        <!-- Header row -->
         <tr>
-          <th>Row</th>
-          <th>Height</th>
-          <th>Content</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <tr>
-          <td><span class="row-badge">Row 0</span></td>
-          <td>80 px</td>
-          <td>Company Logo & Company Name</td>
+          <th width="20%" style="background:#714B67;color:#FFFFFF;text-align:left;padding:16px 18px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-family:Arial,sans-serif;">Row</th>
+          <th width="20%" style="background:#714B67;color:#FFFFFF;text-align:left;padding:16px 18px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-family:Arial,sans-serif;">Height</th>
+          <th width="60%" style="background:#714B67;color:#FFFFFF;text-align:left;padding:16px 18px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-family:Arial,sans-serif;">Content</th>
         </tr>
 
+        <!-- Data rows -->
         <tr>
-          <td><span class="row-badge">Row 1</span></td>
-          <td>22 px</td>
-          <td>Generated by user with timestamp</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:8px;background:#D9EAF7;color:#3A6E99;border:1px solid #B8D4EE;font-size:12px;font-weight:700;font-family:Arial,sans-serif;">Row 0</span>
+          </td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">80 px</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Company Logo &amp; Company Name</td>
         </tr>
 
-        <tr>
-          <td><span class="row-badge">Row 2</span></td>
-          <td>22 px</td>
-          <td>Total selected records count</td>
-        </tr>
-
-        <tr>
-          <td><span class="row-badge">Row 3</span></td>
-          <td>24 px</td>
-          <td>Styled column headers</td>
+        <tr style="background:#FAF7F9;">
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:8px;background:#D9EAF7;color:#3A6E99;border:1px solid #B8D4EE;font-size:12px;font-weight:700;font-family:Arial,sans-serif;">Row 1</span>
+          </td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">22 px</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Generated by user with timestamp</td>
         </tr>
 
         <tr>
-          <td><span class="row-badge">Row 4+</span></td>
-          <td>Auto</td>
-          <td>Data rows with frozen panes</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:8px;background:#D9EAF7;color:#3A6E99;border:1px solid #B8D4EE;font-size:12px;font-weight:700;font-family:Arial,sans-serif;">Row 2</span>
+          </td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">22 px</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Total selected records count</td>
         </tr>
 
-      </tbody>
+        <tr style="background:#FAF7F9;">
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:8px;background:#D9EAF7;color:#3A6E99;border:1px solid #B8D4EE;font-size:12px;font-weight:700;font-family:Arial,sans-serif;">Row 3</span>
+          </td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">24 px</td>
+          <td style="padding:16px 18px;border-bottom:1px solid #E7DCE3;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Styled column headers</td>
+        </tr>
 
-    </table>
+        <tr>
+          <td style="padding:16px 18px;font-size:14px;font-family:Arial,sans-serif;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:8px;background:#D9EAF7;color:#3A6E99;border:1px solid #B8D4EE;font-size:12px;font-weight:700;font-family:Arial,sans-serif;">Row 4+</span>
+          </td>
+          <td style="padding:16px 18px;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Auto</td>
+          <td style="padding:16px 18px;font-size:14px;font-family:Arial,sans-serif;color:#1A0F18;">Data rows with frozen panes</td>
+        </tr>
 
-  </div>
+      </table>
 
-</section>
+    </td>
+  </tr>
+</table>
 
-<!-- INSTALL -->
+<!-- INSTALLATION -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;margin:0;">
+  <tr>
+    <td style="padding:70px 40px;">
 
-<section id="install" class="section">
-
-  <div class="section-inner">
-
-    <div class="section-label">Installation</div>
-
-    <h2 class="section-title">
-      Up in Four Steps
-    </h2>
-
-    <p class="section-sub">
-      No external dependencies. Just install and start exporting.
-    </p>
-
-    <div class="install-steps">
-
-      <div class="install-step">
-
-        <div class="install-num">01</div>
-
-        <h3>Copy Module</h3>
-
-        <p>
-          Move the module into your
-          custom_addons directory.
-        </p>
-
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#714B67;margin-bottom:12px;font-family:Arial,sans-serif;">
+        Installation
+      </div>
+      <div style="font-size:42px;font-weight:900;color:#2E1A2E;line-height:1.1;letter-spacing:-1px;font-family:Georgia,serif;margin-bottom:14px;">
+        Up in Four Steps
+      </div>
+      <div style="font-size:16px;line-height:1.8;color:#7A6070;margin-bottom:48px;max-width:640px;font-family:Arial,sans-serif;">
+        No external dependencies. Just install and start exporting.
       </div>
 
-      <div class="install-step">
+      <!-- Install steps grid -->
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
 
-        <div class="install-num">02</div>
+          <!-- Step 01 -->
+          <td width="25%" style="padding-right:14px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:30px 22px;text-align:center;">
+                  <div style="font-size:52px;font-weight:900;color:#E7DCE3;font-family:Georgia,serif;margin-bottom:14px;line-height:1;">01</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Copy Module</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Move the module into your custom_addons directory.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-        <h3>Restart Odoo</h3>
+          <!-- Step 02 -->
+          <td width="25%" style="padding-right:7px;padding-left:7px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:30px 22px;text-align:center;">
+                  <div style="font-size:52px;font-weight:900;color:#E7DCE3;font-family:Georgia,serif;margin-bottom:14px;line-height:1;">02</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Restart Odoo</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Restart your Odoo server to refresh addons.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-        <p>
-          Restart your Odoo server
-          to refresh addons.
-        </p>
+          <!-- Step 03 -->
+          <td width="25%" style="padding-right:7px;padding-left:7px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:30px 22px;text-align:center;">
+                  <div style="font-size:52px;font-weight:900;color:#E7DCE3;font-family:Georgia,serif;margin-bottom:14px;line-height:1;">03</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Install App</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Search for the module inside the Apps menu.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-      </div>
+          <!-- Step 04 -->
+          <td width="25%" style="padding-left:14px;vertical-align:top;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F9;border-radius:20px;border:1px solid #E7DCE3;box-shadow:0 8px 24px rgba(113,75,103,0.06);">
+              <tr>
+                <td style="padding:30px 22px;text-align:center;">
+                  <div style="font-size:52px;font-weight:900;color:#E7DCE3;font-family:Georgia,serif;margin-bottom:14px;line-height:1;">04</div>
+                  <div style="font-size:16px;font-weight:700;color:#2E1A2E;margin-bottom:10px;font-family:Arial,sans-serif;">Configure Models</div>
+                  <div style="font-size:14px;line-height:1.8;color:#7A6070;font-family:Arial,sans-serif;">Select which models should use branding.</div>
+                </td>
+              </tr>
+            </table>
+          </td>
 
-      <div class="install-step">
+        </tr>
+      </table>
 
-        <div class="install-num">03</div>
-
-        <h3>Install App</h3>
-
-        <p>
-          Search for the module
-          inside the Apps menu.
-        </p>
-
-      </div>
-
-      <div class="install-step">
-
-        <div class="install-num">04</div>
-
-        <h3>Configure Models</h3>
-
-        <p>
-          Select which models
-          should use branding.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+    </td>
+  </tr>
+</table>
 
 <!-- FOOTER -->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#1A0F18;margin:0;">
+  <tr>
+    <td style="padding:60px 30px;text-align:center;">
 
-<footer>
+      <div style="font-size:28px;font-weight:900;color:#FFFFFF;font-family:Georgia,serif;margin-bottom:18px;">
+        MJP Export Excel Branding
+      </div>
 
-  <div class="footer-brand">
-    MJP Export Excel Branding
-  </div>
+      <!-- Tags -->
+      <table cellpadding="0" cellspacing="0" align="center" style="margin-bottom:20px;">
+        <tr>
+          <td style="padding:4px;">
+            <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-family:Arial,sans-serif;">Odoo 18</span>
+          </td>
+          <td style="padding:4px;">
+            <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-family:Arial,sans-serif;">Open Source</span>
+          </td>
+          <td style="padding:4px;">
+            <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-family:Arial,sans-serif;">LGPL-3</span>
+          </td>
+          <td style="padding:4px;">
+            <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-family:Arial,sans-serif;">Excel Export</span>
+          </td>
+          <td style="padding:4px;">
+            <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-family:Arial,sans-serif;">Professional UI</span>
+          </td>
+        </tr>
+      </table>
 
-  <div class="footer-tags">
-    <span class="footer-tag">Odoo 18</span>
-    <span class="footer-tag">Open Source</span>
-    <span class="footer-tag">LGPL-3</span>
-    <span class="footer-tag">Excel Export</span>
-    <span class="footer-tag">Professional UI</span>
-  </div>
+      <div style="color:rgba(255,255,255,0.4);font-size:13px;font-family:Arial,sans-serif;">
+        Built for Odoo 18 · Licensed under LGPL-3
+      </div>
 
-  <p>
-    Built for Odoo 18 · Licensed under LGPL-3
-  </p>
-
-</footer>
+    </td>
+  </tr>
+</table>
 
 </body>
 </html>
