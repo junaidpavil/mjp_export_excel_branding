@@ -32,3 +32,4 @@ class ResConfigSettings(models.TransientModel):
             "excel_export.custom_layout_models",
             ",".join(model_names),
         )
+        
